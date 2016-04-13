@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<title>myAGRO Map</title><link rel="icon" href="img/myagrogreen_2.png">
+		
+		<!-- Import CSS files -->
+		<link rel="stylesheet" type="text/css" href="global.css">
+		<link rel="stylesheet" type="text/css" href="src/JQuery/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="src/Leaflet/leaflet.css" />
+		<link rel="stylesheet" type="text/css" href="src/Leaflet/leaflet.label.css" />
+
+		<!-- Import Leaflet libraries and plug-ins -->
+		<script type="text/javascript" src="src/Leaflet/leaflet-src.js"></script>
+		<script type="text/javascript" src="src/Leaflet/Label.js"></script>
+		<script type="text/javascript" src="src/Leaflet/BaseMarkerMethods.js"></script>
+		<script type="text/javascript" src="src/Leaflet/CircleMarker.Label.js"></script>
+		<script type="text/javascript" src="src/Leaflet/Map.Label.js"></script>
+		<script type="text/javascript" src="src/Leaflet/Marker.Label.js"></script>
+		<script type="text/javascript" src="src/Leaflet/Path.Label.js"></script>
+		<script type="text/javascript" src="src/Leaflet/FeatureGroup.Label.js"></script>
+		
+		<!-- Import Jquery and Jquery UI libraries -->
+		<script type="text/javascript" src="src/JQuery/jquery-1.12.1.min.js"></script>
+		<script type="text/javascript" src="src/JQuery/jquery-ui.js"></script>
+		
+		<!-- Import D3 libraries -->
+		<script type="text/javascript" src="src/D3/d3.min.js"></script>
+		<script type="text/javascript" src="src/D3/pie.js"></script>
+		<script type="text/javascript" src="src/D3/tooltip.js"></script>
+
+		<!-- Import JS data files -->
+		<script type="text/javascript" src="data/villages.js"></script>
+		<script type="text/javascript" src="data/agents.js"></script>
+		<script type="text/javascript" src="data/zones.js"></script>
+		
+		<!-- Import JS break files -->
+		<script type="text/javascript" src="data/villagebreaks.js"></script>
+		<script type="text/javascript" src="data/agentbreaks.js"></script>
+		<script type="text/javascript" src="data/zonebreaks.js"></script>
+		
+		<!-- Import JS files -->
+		<!-- Import Map -->
+		<script type="text/javascript" src="js/map.js"></script>
+		<script type="text/javascript" src="js/pack.js"></script>
+		<script type="text/javascript" src="js/nav.js"></script>
+		<script type="text/javascript" src="js/pay.js"></script>
+	</head>
+
+	<body>
+		<script>
+			//initialize global variables
+			var payon = false, packon = false, diston = false, layeron = false, dispValue, breaks = [], resetSwitch = true;
+		</script>
+		
+		<div class="sidePage" id="pay">
+			<div class="selectors" id = "payselect"><p>Select a subgroup to display on the map.</p>
+				<p><select class="dropdown" name="var1" id="var1">
+				<option value = "none" selected> -- None -- </option>
+				<option value = "Goal">Total CFA Goal</option>
+				<option value = "MLGoal">Male Goal, Large Producers</option>
+				<option value = "FLGoal">Female Goal, Large Producers</option>
+				<option value = "MSGoal">Male Goal, Small Producers</option>
+				<option value = "FSGoal">Female Goal, Small Producers</option>
+				<option value = "CCount">Total Client Count</option>
+				<option value = "FCount">Female Client Count</option>
+				<option value = "MCount">Male Client Count</option>
+				<option value = "Npac">Total Packet Count</option>
+				<option value = "Mais">Corn Packet Count</option>
+				<option value = "Arac">Peanut Packet Count</option>
+				<option value = "Mara">Vegetable Packet Count</option>
+				<option value = "Sem">Semoir and Service Packet Count</option></select></p>
+				<!-- <p><input type="checkbox" class="showper" disabled> Show village percent paid on map</p> -->
+			</div>
+			<HR>
+			<input type="text" class="villagename" id="payname" value="Choose Village/Area">
+			<div class="scrollchart" id ="payscroll">
+				<div id="payment">
+					<p class="chartlabel" id="pay1">CFA Goals and Progress</p><span id="paychart1"></span>
+					* A large producer is defined as a client enrolled for 1/2 hectare or greater.
+					<p class="chartlabel" id="pay2">Clients and Client Completion Rate</p><span id="paychart2"></span>
+					<p>* Percentage indicated clients who have completed at least 1 enrolled packet.</p>
+				</div>
+			</div>
+			<div class="scrollchart" id="packscroll">							
+				<div id="packet"><!-- <input type="text" class="villagename" id="packname" value="Packet Overview"> -->
+					<table id="packlegend"><tr>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #843c39;">Semoir</div></td><td><div style="width:10px;height:15px;border:.2px solid #aaa;background-color: #aaa;"></div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #637939;">Veg.</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #8c6d31;">Corn</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #393b79;">Peanut</div></td>
+					</tr><tr>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #d6616b;">Service</div></td><td><div style="width:10px;height:15px;border:.2px solid #aaa;background-color: #aaa;"></div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #8ca252;">Male</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #bd9e39;">Male</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #478793;">Male</div></td>
+					</tr><tr><td></td><td></td><td></td>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #e7ba52;">large</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #4fa9b9;">large</div></td>
+					</tr><tr><td></td><td></td><td></td>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #e7cb94;">small</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #72cfe0;">small</div></td>
+					</tr><tr><td></td><td></td>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #b5cf6b;">Female</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #bd7a3c;">Female</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #5254a3;">Female</div></td>
+					</tr><tr><td></td><td></td><td></td>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #d78b44;">large</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #6b6ecf;">large</div></td>
+					</tr><tr><td></td><td></td><td></td>
+						<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #ef9f55;">small</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #9c9ede;">small</div></td>
+					</tr></table>
+					<p class="chartlabel" id="packtitle">Packet Distribution</p><span id="chart1"></span>
+					<p>* A large producer is defined as a client enrolled for 1/2 hectare or greater.</p>
+					<p class="chartlabel" id="packtitle2"></p><span id="chart2"></span>
+				</div>
+			</div>
+		</div>
+		
+<!-- 		<div class="sidePage" id="pack">
+			<p class="subtitle">Packet Overview</p>
+			<div class="selectors" id = "packselect"><p>Select a subgroup to display on the map.</p>
+				<p><select class="dropdown" name="var2" id="var2">
+				<option value = "none" selected> -- select -- </option>
+				<option value = "Npac">All packets</option>
+				<option value = "Mais">Corn</option>
+				<option value = "Arac">Peanut</option>
+				<option value = "Mara">Garden</option>
+				<option value = "Sem">Semoir and Service</option></select></p>
+			</div>
+			<HR>
+			<input type="text" class="villagename" id="packname" value="Choose a region/village">
+			<div class="scrollchart" id="packscroll">
+			<table id="packlegend"><tr>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #843c39;">Semoir</div></td><td><div style="width:10px;height:15px;border:.2px solid #aaa;background-color: #aaa;"></div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #637939;">Garden</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #8c6d31;">Corn</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #393b79;">Peanut</div></td>
+				</tr><tr>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #d6616b;">Service</div></td><td><div style="width:10px;height:15px;border:.2px solid #aaa;background-color: #aaa;"></div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #8ca252;">Male</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #bd9e39;">Male</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #478793;">Male</div></td>
+				</tr><tr><td></td><td></td><td></td>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #e7ba52;">large</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #4fa9b9;">large</div></td>
+				</tr><tr><td></td><td></td><td></td>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #e7cb94;">small</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #72cfe0;">small</div></td>
+				</tr><tr><td></td><td></td>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #b5cf6b;">Female</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #bd7a3c;">Female</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #5254a3;">Female</div></td>
+				</tr><tr><td></td><td></td><td></td>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #d78b44;">large</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #6b6ecf;">large</div></td>
+				</tr><tr><td></td><td></td><td></td>
+					<td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #ef9f55;">small</div></td><td><div style="width:40px;height:15px;border:.2px solid #aaa;background-color: #9c9ede;">small</div></td>
+				</tr></table>
+				<p class="chartlabel" id="packtitle">Packet Distribution</p><span id="chart1"></span>
+				<p class="chartlabel" id="packtitle2"></p><span id="chart2"></span>
+				
+			</div>
+		</div> -->
+		
+		<div class="sidePage" id="dist">
+			<input type="text" id="distname" class="villagename" value="Choose a village">
+			<span class="distance"></span>
+		</div>
+		
+		<div id="mainpage">
+			<nav>
+				<p id ="title"><img src="img/myagrogreen_2.png" width="120px"><br/></p>
+				<ul id="navigation">
+					<li><a href="#pay"><img src="img/pay.png" class="icon" width="40px"><span>Payment Tracking</span></a></li>
+					<li><a href="#pack"><img src="img/pack.png" class="icon" width="40px"><span>Packet View</span></a></li>
+					<li><a href="#dist"><img src="img/dist.png" class="icon" width="40px"><span>Distance Calculator</span></a></li>
+				</ul>
+			</nav>
+			<div id="content"> 
+				<div id="base"></div>
+			</div>
+		</div>
+		
+		<div id="closeButton"><a href="#" id="closebtn" class="close">Close</a><a href="#" id="clearbtn" class="clear">Reset</a></div>
+
+	</body>
+</html>
