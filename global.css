@@ -1,0 +1,195 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 12px;
+	height: 100%;
+	font-family: Georgia;
+	background: #aaa;
+	color: #343434;
+	overflow: hidden;
+}
+
+#mainpage {
+	width: 100%;
+	height: 100%;
+	display: block;
+	background: #aaa;
+	overflow: hidden;
+	position: absolute;
+	z-index: 5;
+	color: #fff;
+}
+
+#base{
+	position: absolute;
+	left: 250px;
+	right: 0px;
+	height: 100%;
+	z-index: 6;
+	overflow: hidden;
+}
+
+#mainpage nav { 
+	position: absolute;
+	width: 250px;
+	min-height: 100%;
+	padding-top: 50px;
+	background: #343638;
+}
+
+ul { padding-top: 50px; padding-left: 10px; }
+#navigation { list-style: none; }
+#navigation li { display: table; width: 100%; }
+#navigation li a { display: block; padding: 5px 10px; width: 100%; height: 40px; line-height: 40px; color: #bec585; font-size: 11pt; text-decoration: none; }
+#navigation li a:hover, #navigation li a.open { background: #484e57; }
+#navigation li a img { display: table-cell; vertical-align: middle; float: left; }
+#navigation li a span { display: table-cell; vertical-align: middle; }
+.icon{ padding-right: 20px; }
+
+#content {
+	display: block;
+	margin-left: 250px;
+	padding: 0px 0px;
+	width: 100%;
+	height: 100%;
+}
+
+#title{padding-right: 50px; text-align: right;}
+
+.sidePage{
+	display: block;
+	width: 485px;
+	height: 98%;
+	background: #aaa;
+	padding: 10px 11px;
+	padding-top: 10px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	overflow-x: hidden;
+	z-index: 0;
+}
+
+#dist{
+	width: 235px;
+}
+
+#payname, #packname{
+	display:block;
+}
+
+.scrollchart{
+	position: absolute;
+	top: 150px;
+	bottom: 70px;
+	left: 10px;
+	right: 10px;
+	display: none;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.subtitle{
+	font-size: 12pt;
+	font-weight: bold
+}
+
+.selectors{
+	position: relative;
+	margin: 10px;
+}
+
+.dropdown{
+	width:100%;
+	font-family: Georgia;
+}
+
+a.close, a.clear {
+	position:absolute;
+ 	display: inline-block;
+	background: #197B30;
+	padding: 10px 8px;
+	color: #bec585;
+	font-weight: bold;
+	font-size: 12pt;
+	text-decoration: none;
+	bottom:10px;
+	left: 10px;
+	z-index:4;
+}
+
+#clearbtn { left: 90px; }
+
+.chartlabel{
+	text-align: left;
+	font-weight:bold;
+	left: 20px;
+	margin: 10px;
+	font-size: 16px;
+}
+
+#pay2{
+	margin-top: 30px;
+}
+
+.villagename{
+	display: block;
+	position: absolute;
+	right: 20px;
+	text-align: right;
+	border: 0;
+	background-color:rgba(255, 255, 255,.0);
+	font-size: 24px;
+	color:#333;
+	width: 100%;
+}
+
+#packlegend{
+	position:absolute;
+	right:10px;
+	text-align:center;
+	color:#ddd;
+	font-size:7pt;
+}
+
+.y.axis path { display: none; }
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.tooltip {
+  font-size: 11pt;
+  color:#343434;
+  padding: 2px;
+  border: .5px solid white;
+  border-radius: 2px;
+  background-color: #aaa;
+  z-index: 10
+}
+
+.bartext{
+	font-size: 14px;
+	color:#343434;
+	vertical-align:middle; /*!!!!not working*/
+}
+
+.legend {
+    line-height: 18px;
+    color: #343434;
+	font-family:Georgia;
+	background-color: rgba(255, 255, 255,.8);
+	padding: 10px;
+	width: 140px;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
